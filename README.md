@@ -35,8 +35,32 @@ Dưới đây là một số kiến thức nền về Node.js mà mình đã t�
 4. Khi **libuv thread pool** hoàn thành một task, một hàm **callback** sẽ được gọi để xử lý lỗi (nếu có) hoặc xử lý kết quả trả về từ **thread pool**. Hàm **callback** này sẽ được đưa vào **event queue**.
 5. **Event-loop** sẽ luôn luôn kiểm tra xem liệu **call-stack** có đang trống hay không. Nếu có nó sẽ gửi các **callbacks** từ **event queue** vào **call-stack** để thực thi.
 
-## 6. Event, Event Emiter
+## 6. Event, EventEmitter
+
+- Trong Node.js, phần lớn các APIs được xây dựng theo kiến trúc hướng sự kiện (**event-driver**). Mọi hành động đều có thể được gọi là **Event** trong Node.js
+- Node.js cung cấp class EventEmitter để xử lý các sự kiện đó.
 
 ## 7. Node.js REPL
 
+- REPL là viết tắt của Read-Evaluate-Print-Loop là công cụ để thực hiện code Node.js trên màn hình console như terminal.
+
 ## 8. Callback, Promise, Async/Await
+
+### 8.1. Callback
+
+- **Callback** được gọi là hàm gọi lại, là hàm được truyền vào một hàm khác dưới dạng đối số. Một hàm nhận một hàm khác làm đối số thì được gọi là higher-order function. Thông thường **callback** sẽ được thực thi sau khi hàm khác đã được thực thi xong.
+- **Callback hell** là khi gọi các hàm callback lồng nhau quá nhiều làm cho function trở nên rất khó hiểu.
+
+### 8.2. Promise
+
+- Một promise đại diện cho việc hoàn thành một asynchronous function.
+- Trong Node.js, Promise là một object được khởi tạo bằng 1 hàm bao gồm 2 tham số resolve và reject để xử lý cho việc thành công hoặc thất bại của hoạt động non-blocking I/O tương ứng.
+- Một Promise có thể có 3 trạng thái:
+  - Pending: là trạng thái ban đầu trước khi được resolved hoặc rejected.
+  - Fullfilled: hoạt động thành công, Promise đã được resolved.
+  - Rejected: hoạt động thất bại, Promise đã bị rejected.
+
+### 8.3. Async/Await
+
+- Async/Await function cho phép bạn thực thi thực hiện các code asynchronous trông giống như code synchronous. async/await function vẫn sử dụng Promise ngầm bên trong nó nhưng có cú pháp truyền thống hơn.
+- Một async/await function thì luôn luôn trả về một Promise. Vì vậy có thể sử dụng cú pháp của Promise khi gọi hàm async/await.
