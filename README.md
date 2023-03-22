@@ -54,13 +54,88 @@ Dưới đây là một số kiến thức nền về Node.js mà mình đã t�
 ### 8.2. Promise
 
 - Một promise đại diện cho việc hoàn thành một asynchronous function.
-- Trong Node.js, Promise là một object được khởi tạo bằng 1 hàm bao gồm 2 tham số resolve và reject để xử lý cho việc thành công hoặc thất bại của hoạt động non-blocking I/O tương ứng.
-- Một Promise có thể có 3 trạng thái:
-  - Pending: là trạng thái ban đầu trước khi được resolved hoặc rejected.
-  - Fullfilled: hoạt động thành công, Promise đã được resolved.
-  - Rejected: hoạt động thất bại, Promise đã bị rejected.
+- Trong Node.js, **Promise** là một object được khởi tạo bằng 1 hàm bao gồm 2 tham số _resolve_ và _reject_ để xử lý cho việc thành công hoặc thất bại của hoạt động non-blocking I/O tương ứng.
+- Một **Promise** có thể có 3 trạng thái:
+  - **Pending**: là trạng thái ban đầu trước khi được resolved hoặc rejected.
+  - **Fullfilled**: hoạt động thành công, Promise đã được resolved.
+  - **Rejected**: hoạt động thất bại, Promise đã bị rejected.
 
 ### 8.3. Async/Await
 
-- Async/Await function cho phép bạn thực thi thực hiện các code asynchronous trông giống như code synchronous. async/await function vẫn sử dụng Promise ngầm bên trong nó nhưng có cú pháp truyền thống hơn.
-- Một async/await function thì luôn luôn trả về một Promise. Vì vậy có thể sử dụng cú pháp của Promise khi gọi hàm async/await.
+- **Async/Await** function cho phép bạn thực thi thực hiện các code asynchronous trông giống như code synchronous. **async/await** function vẫn sử dụng Promise ngầm bên trong nó nhưng có cú pháp truyền thống hơn.
+- Một **async/await** function thì luôn luôn trả về một Promise. Vì vậy có thể sử dụng cú pháp của Promise khi gọi hàm **async/await**.
+
+## 9. NestJs framework
+
+### 9.1. Overview
+
+Nest là một framework để xây dựng một cách hiệu quả và có thể mở rộng các ứng dụng Node.js server-side. Một ứng dụng Nest được cấu tạo từ nhiều Module, bắt đầu từ một root Module lớn nhất Application Module là nơi khởi tạo app và import các Module con.
+
+### 9.2. Request lifecycle
+
+- Nhìn chung trong Nest, 1 request sẽ được truyền qua middlewares tới guards, tiếp theo tới interceptors, rồi đến các pipes, trước khi đến các controller handle, và cuối cùng lại qua các interceptors trước khi response.
+- Chi tiết về một vòng đời như sau:
+  1. Incoming request
+  2. Global -> Module middlewares
+  3. Global -> Controller -> Route guards
+  4. Global -> Controller -> Route interceptors (pre-controller)
+  5. Global -> Controller -> Route pipes
+  6. Controllers
+  7. Services
+  8. Route -> Controller -> Global interceptors (port-request)
+  9. Exception filters
+  10. Server response
+
+### 9.3. Controllers
+
+- Controller chịu trách nhiệm xử lý các incoming request và returning respose cho client.
+- Mục đích của controller là nhận các request, routing để điều hướng các controller handle tương ứng với request.
+
+### 9.4. Providers
+
+Providers là một khái niệm cơ bản trong Nest. Các services, repositories, factories, helpers, ... có thể xem như là các providers. Ý tưởng của providers là nó có thể **injected** như một dependency.
+
+### 9.5. Modules
+
+Modules là các class được chú thích bằng @Module() decolator. Cung cấp metadata mà Nest dùng để tổ chức cấu trúc ứng dụng.
+
+### 9.6. Middlewares
+
+Middleware là một function được gọi trước khi request đến route handler. Middleware có quyền truy cập vào req object, res object và middleware function tiếp theo trong request-response cycle.
+
+Các chức năng của middlewares:
+
+- thực thi bất kỳ mã code nào.
+- thực hiện các thay đổi cho req và res object.
+- kết thúc req-res cycle.
+- call middleware tiếp theo.
+
+### 9.7. Exception filters
+
+Nest đi kèm với một **exceptions layer** built-in chịu trách nhiệm xử lý tất cả các ngoại lệ chưa được xử lý trên ứng dụng.
+
+### 9.8. Pipes
+
+Một pipe là một class được chú thích bằng decorator @Injectable() và phải implements interface **PipeTransform**
+
+**Pipes** có 2 trường hợp sử dụng điển hình:
+
+- **transformation**: chuyển đổi dữ liệu đầu vào thành dạng mong muốn
+- **validation**: đánh giá tính valid của dữ liệu đầu vào, hoặc throw error nếu dữ liệu không phù hợp.
+
+### 9.9. Guards
+
+Một guard là một class được chú thích bằng decorator @Injectable() và phải implements interface **CanActivate**
+
+**Guards** có 1 trách nhiệm duy nhất đó là authorization.
+
+### 9.10. Interceptors
+
+Một interceptor là một class được chú thích bằng decorator @Injectable() và phải implements interface **NestInterceptor**
+
+Nhiệm vụ của **Interceptors**
+
+- thêm các các logic trước và sau khi thực thi method
+- transform kết quả trả về hoặc ngoại lệ được ném ra từ một function
+- extend hành vi cơ bản của function
+- override một function tùy thuộc vào điều kiện cụ thể (ví dụ như để caching)
